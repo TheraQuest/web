@@ -1,12 +1,14 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { TextField, Button, Container, Typography } from "@mui/material";
+import { TextField, Button, Container, Typography, MenuItem, Select, FormControl, InputLabel } from "@mui/material";
 import axios from "axios";
 
 function RegisterPage() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
+    const [therapistID, setTherapistID] = useState(""); // Therapist ID field
+    const [gender, setGender] = useState(""); // Gender field
     const [error, setError] = useState("");
     const navigate = useNavigate();
 
@@ -16,11 +18,19 @@ function RegisterPage() {
             return;
         }
 
+        if (!therapistID || !gender) {
+            setError("Therapist ID and Gender are required");
+            return;
+        }
+
         try {
             await axios.post("http://localhost:5000/api/auth/register", {
                 username,
                 password,
+                therapistID,
+                gender
             });
+
             navigate("/"); // Redirect to login after successful registration
         } catch (err) {
             setError(err.response?.data?.message || "Registration failed");
@@ -29,8 +39,9 @@ function RegisterPage() {
 
     return (
         <Container maxWidth="xs" style={{ marginTop: "100px", textAlign: "center" }}>
-            <Typography variant="h5">TheraQuest Registration</Typography>
+            <Typography variant="h5">TheraQuest Therapist Registration</Typography>
             {error && <Typography color="error">{error}</Typography>}
+            
             <TextField
                 fullWidth
                 label="Username"
@@ -38,6 +49,27 @@ function RegisterPage() {
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
             />
+            
+            <TextField
+                fullWidth
+                label="Therapist ID"
+                margin="normal"
+                value={therapistID}
+                onChange={(e) => setTherapistID(e.target.value)}
+            />
+            
+            <FormControl fullWidth margin="normal">
+                <InputLabel>Gender</InputLabel>
+                <Select
+                    value={gender}
+                    onChange={(e) => setGender(e.target.value)}
+                >
+                    <MenuItem value="Male">Male</MenuItem>
+                    <MenuItem value="Female">Female</MenuItem>
+                    <MenuItem value="Other">Other</MenuItem>
+                </Select>
+            </FormControl>
+
             <TextField
                 fullWidth
                 label="Password"
@@ -46,6 +78,7 @@ function RegisterPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
             />
+
             <TextField
                 fullWidth
                 label="Confirm Password"
@@ -54,9 +87,11 @@ function RegisterPage() {
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
             />
+
             <Button fullWidth variant="contained" color="primary" onClick={handleRegister}>
                 Register
             </Button>
+
             <Button fullWidth style={{ marginTop: "10px" }} onClick={() => navigate("/")}>
                 Back to Login
             </Button>

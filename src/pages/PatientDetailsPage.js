@@ -39,24 +39,63 @@ function PatientDetailsPage() {
     }, [id, navigate]);
 
     // Handle note saving for a session
+  
     const handleSaveNote = async (sessionId) => {
         try {
             const token = localStorage.getItem("token");
-            await axios.put(
-                `http://localhost:5000/api/sessions/${sessionId}/note`,
-                { therapistNote: therapistNotes[sessionId] || "" }, // Send the specific note for this session
+            await axios.put(`http://localhost:5000/api/sessions/${sessionId}/note`, 
+                { therapistNote: therapistNotes[sessionId] || "" }, 
                 { headers: { Authorization: `Bearer ${token}` } }
             );
+    
             alert("Note saved!");
+    
+            // 🔹 Refresh session list after saving the note
+            const updatedSessions = sessions.map(session =>
+                session._id === sessionId ? { ...session, therapistNote: therapistNotes[sessionId] } : session
+            );
+            setSessions(updatedSessions);
         } catch (error) {
             console.error("Error saving note", error);
         }
     };
+    
+  
+    // const handleSaveNote = async (sessionId) => {
+    //     try {
+    //         const token = localStorage.getItem("token");
+    //         await axios.put(
+    //             `http://localhost:5000/api/sessions/${sessionId}/note`,
+    //             { therapistNote: therapistNotes[sessionId] || "" }, // Send the specific note for this session
+    //             { headers: { Authorization: `Bearer ${token}` } }
+    //         );
+    //         alert("Note saved!");
+    //     } catch (error) {
+    //         console.error("Error saving note", error);
+    //     }
+    // };
 
      // Convert stored date format (YYYY-MM-DD) to dd/mm/yyyy for display
      const formatDate = (date) => {
         return dayjs(date).format("DD/MM/YYYY");
     };
+
+    const handleStartSession = async () => {
+        try {
+            const token = localStorage.getItem("token");
+            const res = await axios.post("http://localhost:5000/api/sessions", 
+                { patientId: id }, 
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
+    
+            alert("New session started successfully!");
+            setSessions([...sessions, res.data.session]); // 🔹 Add new session to the list
+        } catch (error) {
+            console.error("Error starting session", error);
+        }
+    };
+    
+    
 
     return (
         <Container>
@@ -73,13 +112,22 @@ function PatientDetailsPage() {
                 </>
             )}
 
+            <Button variant="contained" color="primary" style={{ marginTop: "20px", marginBottom: "20px" }} onClick={handleStartSession}>
+                    Start New Session
+            </Button>
+
             <Typography variant="h5" style={{ marginTop: "20px" }}><b>Session History:</b></Typography>
             <List>
                 {sessions.map((session) => (
                     <ListItem key={session._id}>
                         <ListItemText
                             primary={`Score: ${session.gameScore}, Help Level: ${session.helpLevelUsed}`}
-                            secondary={`Date: ${new Date(session.sessionDate).toLocaleDateString()}`}
+                            secondary={
+                                <>
+                                    <div><b>Date:</b> {session.sessionDate || "No date available"}</div> {/* 🔹 Ensure date is always shown */}
+                                    <div><b>Note:</b> {session.therapistNote || "No notes added"}</div> {/* 🔹 Ensure note is always shown */}
+                                </>
+                            }
                         />
                         <TextField
                             fullWidth
@@ -94,6 +142,7 @@ function PatientDetailsPage() {
                     </ListItem>
                 ))}
             </List>
+
 
             <Button fullWidth style={{ marginTop: "10px" }} onClick={() => navigate("/dashboard")}>
                 Back to Dashboard
