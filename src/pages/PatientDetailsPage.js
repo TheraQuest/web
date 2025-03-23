@@ -39,7 +39,6 @@ function PatientDetailsPage() {
     }, [id, navigate]);
 
     // Handle note saving for a session
-  
     const handleSaveNote = async (sessionId) => {
         try {
             const token = localStorage.getItem("token");
@@ -50,7 +49,7 @@ function PatientDetailsPage() {
     
             alert("Note saved!");
     
-            // 🔹 Refresh session list after saving the note
+            // Refresh session list after saving the note
             const updatedSessions = sessions.map(session =>
                 session._id === sessionId ? { ...session, therapistNote: therapistNotes[sessionId] } : session
             );
@@ -60,22 +59,7 @@ function PatientDetailsPage() {
         }
     };
     
-  
-    // const handleSaveNote = async (sessionId) => {
-    //     try {
-    //         const token = localStorage.getItem("token");
-    //         await axios.put(
-    //             `http://localhost:5000/api/sessions/${sessionId}/note`,
-    //             { therapistNote: therapistNotes[sessionId] || "" }, // Send the specific note for this session
-    //             { headers: { Authorization: `Bearer ${token}` } }
-    //         );
-    //         alert("Note saved!");
-    //     } catch (error) {
-    //         console.error("Error saving note", error);
-    //     }
-    // };
 
-     // Convert stored date format (YYYY-MM-DD) to dd/mm/yyyy for display
      const formatDate = (date) => {
         return dayjs(date).format("DD/MM/YYYY");
     };
@@ -89,7 +73,7 @@ function PatientDetailsPage() {
             );
     
             alert("New session started successfully!");
-            setSessions([...sessions, res.data.session]); // 🔹 Add new session to the list
+            setSessions([...sessions, res.data.session]); // Add new session to the list
         } catch (error) {
             console.error("Error starting session", error);
         }
@@ -124,8 +108,8 @@ function PatientDetailsPage() {
                             primary={`Score: ${session.gameScore}, Help Level: ${session.helpLevelUsed}`}
                             secondary={
                                 <>
-                                    <div><b>Date:</b> {session.sessionDate || "No date available"}</div> {/* 🔹 Ensure date is always shown */}
-                                    <div><b>Note:</b> {session.therapistNote || "No notes added"}</div> {/* 🔹 Ensure note is always shown */}
+                                    <div><b>Date:</b> {session.sessionDate || "No date available"}</div> 
+                                    <div><b>Note:</b> {session.therapistNote || "No notes added"}</div>
                                 </>
                             }
                         />

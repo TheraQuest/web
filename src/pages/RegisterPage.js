@@ -7,8 +7,8 @@ function RegisterPage() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
-    const [therapistID, setTherapistID] = useState(""); // Therapist ID field
-    const [gender, setGender] = useState(""); // Gender field
+    const [therapistID, setTherapistID] = useState("");
+    const [gender, setGender] = useState("");
     const [error, setError] = useState("");
     const navigate = useNavigate();
 

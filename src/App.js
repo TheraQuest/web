@@ -1,4 +1,7 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { ThemeProvider, CssBaseline } from "@mui/material";
+import theme from "./theme";
+import Layout from "./components/Layout"; // Import Layout
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import DashboardPage from "./pages/DashboardPage";
@@ -6,6 +9,8 @@ import AddPatientPage from "./pages/AddPatientPage";
 import PatientDetailsPage from "./pages/PatientDetailsPage";
 import { useEffect } from "react";
 import axios from "axios";
+import SettingsPage from "./pages/SettingsPage";
+
 
 // Automatically log out if the token expires
 axios.interceptors.response.use(
@@ -51,15 +56,48 @@ function App() {
     }, []);
 
     return (
-        <Router>
-            <Routes>
-                <Route path="/" element={<LoginPage />} />
-                <Route path="/register" element={<RegisterPage />} />
-                <Route path="/dashboard" element={<PrivateRoute element={<DashboardPage />} />} />
-                <Route path="/add-patient" element={<PrivateRoute element={<AddPatientPage />} />} />
-                <Route path="/patient/:id" element={<PrivateRoute element={<PatientDetailsPage />} />} />
-            </Routes>
-        </Router>
+        <ThemeProvider theme={theme}>
+            <CssBaseline />
+            <Router>
+                <Routes>
+                    <Route path="/" element={<LoginPage />} />
+                    <Route path="/register" element={<RegisterPage />} />
+
+                    <Route
+                        path="/dashboard"
+                        element={
+                            <Layout>
+                                <DashboardPage />
+                            </Layout>
+                        }
+                    />
+                    <Route
+                        path="/add-patient"
+                        element={
+                            <Layout>
+                                <AddPatientPage />
+                            </Layout>
+                        }
+                    />
+                    <Route
+                        path="/patient/:id"
+                        element={
+                            <Layout>
+                                <PatientDetailsPage />
+                            </Layout>
+                        }
+                    />
+                    <Route
+                        path="/settings"
+                        element={
+                            <Layout>
+                                <SettingsPage />
+                            </Layout>
+                        }
+                        />
+                </Routes>
+            </Router>
+        </ThemeProvider>
     );
 }
 
