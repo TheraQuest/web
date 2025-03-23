@@ -11,7 +11,7 @@ function AddPatientPage() {
     const [fullName, setFullName] = useState("");
     const [idNumber, setIdNumber] = useState("");
     const [dateOfBirth, setDateOfBirth] = useState("");
-    const [gender, setGender] = useState(""); // Gender field
+    const [gender, setGender] = useState("");
     const [medicalNote, setMedicalNote] = useState("");
     const [error, setError] = useState("");
     const navigate = useNavigate();
