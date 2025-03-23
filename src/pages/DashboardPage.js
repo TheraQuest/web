@@ -1,41 +1,35 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { Container, Typography, Button, TextField, List, ListItem, ListItemText, Card } from "@mui/material";
+import { Container, Typography, Button, TextField, List, ListItem, ListItemText, Grid } from "@mui/material";
 import axios from "axios";
 import dayjs from "dayjs";
 
 function DashboardPage() {
     const [patients, setPatients] = useState([]);
     const [search, setSearch] = useState("");
-    const [stats, setStats] = useState({ totalPatients: 0, totalSessions: 0, avgScores: [] });
+    const [showAllPatients, setShowAllPatients] = useState(true); // Default: Show all patients
     const navigate = useNavigate();
 
+    const fetchPatients = useCallback(async () => {
+        const token = localStorage.getItem("token");
+        if (!token) {
+            navigate("/");
+            return;
+        }
+    
+        try {
+            const response = await axios.get(`http://localhost:5000/api/patients?myPatients=${!showAllPatients}`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            setPatients(response.data);
+        } catch (error) {
+            console.error("Error fetching patients", error);
+        }
+    }, [navigate, showAllPatients]);
+    
     useEffect(() => {
-        const fetchPatientsAndStats = async () => {
-            const token = localStorage.getItem("token");
-            if (!token) {
-                navigate("/");
-                return;
-            }
-
-            try {
-                const patientsRes = await axios.get("http://localhost:5000/api/patients", {
-                    headers: { Authorization: `Bearer ${token}` }
-                });
-                setPatients(patientsRes.data);
-
-                const statsRes = await axios.get("http://localhost:5000/api/patients/summary", {
-                    headers: { Authorization: `Bearer ${token}` }
-                });
-                setStats(statsRes.data);
-            } catch (error) {
-                console.error("Error fetching data", error);
-            }
-        };
-        
-
-        fetchPatientsAndStats();
-    }, [navigate]);
+        fetchPatients();
+    }, [fetchPatients]);
 
     const calculateAge = (dateOfBirth) => {
         const dob = dayjs(dateOfBirth);
@@ -45,24 +39,33 @@ function DashboardPage() {
         return `${years} years, ${months} months`;
     };
 
-
     return (
         <Container>
             <Typography variant="h4" style={{ marginTop: "20px" }}>
                 Therapist Dashboard
             </Typography>
 
-            {/* Display Stats */}
-            <Card style={{ padding: "20px", marginTop: "10px" }}>
-                <Typography variant="h6">Total Patients: {stats.totalPatients}</Typography>
-                <Typography variant="h6">Total Sessions: {stats.totalSessions}</Typography>
-                <Typography variant="h6">Average Score per Patient:</Typography>
-                <ul>
-                    {stats.avgScores.map((entry) => (
-                        <li key={entry._id}>Patient ID: {entry._id}, Avg Score: {entry.avgScore.toFixed(2)}</li>
-                    ))}
-                </ul>
-            </Card>
+            {/* Buttons for "All Patients" & "My Patients" */}
+            <Grid container spacing={2} style={{ marginTop: "10px", marginBottom: "10px" }}>
+                <Grid item>
+                    <Button 
+                        variant={showAllPatients ? "contained" : "outlined"} 
+                        color="primary" 
+                        onClick={() => setShowAllPatients(true)}
+                    >
+                        All Patients
+                    </Button>
+                </Grid>
+                <Grid item>
+                    <Button 
+                        variant={!showAllPatients ? "contained" : "outlined"} 
+                        color="secondary" 
+                        onClick={() => setShowAllPatients(false)}
+                    >
+                        My Patients
+                    </Button>
+                </Grid>
+            </Grid>
 
             <Button variant="contained" color="primary" onClick={() => navigate("/add-patient")} style={{ marginTop: "10px" }}>
                 Add New Patient
@@ -70,7 +73,7 @@ function DashboardPage() {
 
             <TextField
                 fullWidth
-                label="Search Patient"
+                label="Search Patient (Name or ID)"
                 margin="normal"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
@@ -78,11 +81,21 @@ function DashboardPage() {
 
             <List>
                 {patients
-                    .filter((patient) => patient.fullName.toLowerCase().includes(search.toLowerCase()))
+                    .filter((patient) => {
+                        const searchText = search.toLowerCase();
+                        return (
+                            patient.fullName.toLowerCase().includes(searchText) ||
+                            patient.idNumber.includes(searchText)
+                        );
+                    })
                     .map((patient) => (
-                        <ListItem key={patient._id} button onClick={() => navigate(`/patient/${patient._id}`)}>
+                        <ListItem 
+                            key={patient._id} 
+                            button 
+                            onClick={() => navigate(`/patient/${patient._id}`)}
+                        >
                             <ListItemText 
-                                primary={`${patient.fullName}`}
+                                primary={`${patient.fullName} (${patient.gender})`} 
                                 secondary={`ID: ${patient.idNumber} | Age: ${calculateAge(patient.dateOfBirth)}`}
                             />
                         </ListItem>
