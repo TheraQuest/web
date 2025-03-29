@@ -13,6 +13,7 @@ function DashboardPage() {
     const [search, setSearch] = useState("");
     const [showAllPatients, setShowAllPatients] = useState(true);
     const navigate = useNavigate();
+    
 
     const fetchPatients = useCallback(async () => {
         const token = localStorage.getItem("token");
@@ -42,6 +43,7 @@ function DashboardPage() {
         const months = now.diff(dob.add(years, "year"), "month");
         return `${years} years, ${months} months`;
     };
+    
 
     return (
         <>
@@ -110,6 +112,14 @@ function DashboardPage() {
                                         </Typography>
                                         <Typography variant="body2">ID: {patient.idNumber}</Typography>
                                         <Typography variant="body2">Age: {calculateAge(patient.dateOfBirth)}</Typography>
+                                        <Button 
+                                            variant="outlined" 
+                                            color="primary" 
+                                            style={{ marginTop: "10px" }}
+                                            onClick={() => navigate(`/patient/edit/${patient._id}`)}>
+                                            Edit Patient
+                                        </Button>
+
                                     </CardContent>
                                 </Card>
                             </Grid>
