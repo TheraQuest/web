@@ -122,7 +122,7 @@ function PatientDetailsPage() {
                         <Card 
                             sx={{ 
                                 backgroundColor: "#white", 
-                                borderLeft: "5px solid rgba(47, 152, 209, 0.71)",
+                                borderLeft: "5px solid #1f6446",
                                 p: 2,
                                 cursor: "pointer"
                             }}

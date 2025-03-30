@@ -45,13 +45,14 @@ function Navbar() {
 
     return (
         <>
-            <AppBar position="fixed" sx={{ backgroundColor: "#0077b6", zIndex: 1201 }}>
+            {/* <AppBar position="fixed" sx={{ backgroundColor: "#0077b6", zIndex: 1201 }}> */}
+            <AppBar position="fixed" sx={{ backgroundColor: "##1f6446", zIndex: 1201 }}>
                 <Toolbar>
                     <IconButton edge="start" color="inherit" onClick={handleToggleDrawer}>
                         <MenuIcon /> 
                     </IconButton>
                     <Typography
-                        variant="h6"
+                        variant="h6" color="white"
                         sx={{ flexGrow: 1, cursor: "pointer" }}
                         onClick={() => window.location.href = "/dashboard"} // Redirect to dashboard
                     >

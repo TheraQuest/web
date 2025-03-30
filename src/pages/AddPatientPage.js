@@ -13,6 +13,7 @@ function AddPatientPage() {
     const [dateOfBirth, setDateOfBirth] = useState("");
     const [gender, setGender] = useState("");
     const [medicalNote, setMedicalNote] = useState("");
+    const [status, setStatus] = useState("");
     const [error, setError] = useState("");
     const navigate = useNavigate();
 
@@ -40,7 +41,8 @@ function AddPatientPage() {
                 idNumber,
                 dateOfBirth: formattedDate,
                 gender,
-                medicalNote
+                medicalNote, 
+                status
             }, {
                 headers: { Authorization: `Bearer ${token}` }
             });
@@ -71,6 +73,17 @@ function AddPatientPage() {
                 value={idNumber} 
                 onChange={(e) => setIdNumber(e.target.value)} 
             />
+{/* 
+            <TextField
+                fullWidth
+                label="Date of Birth"
+                // name="dateOfBirth"
+                type="date"
+                value={dateOfBirth}
+                onChange={(e) => setDateOfBirth(e.target.value)} 
+                sx={{ mb: 2 }}
+                InputLabelProps={{ shrink: true }}
+            /> */}
             
             <TextField 
                 fullWidth 
@@ -99,6 +112,17 @@ function AddPatientPage() {
                 value={medicalNote} 
                 onChange={(e) => setMedicalNote(e.target.value)} 
             />
+
+            <FormControl fullWidth margin="normal">
+                <InputLabel>Status</InputLabel>
+                <Select 
+                    value={status} 
+                    onChange={(e) => setStatus(e.target.value)}
+                >
+                    <MenuItem value="Current">Current Patient</MenuItem>
+                    <MenuItem value="Past">Past Patient</MenuItem>
+                </Select>
+            </FormControl>
 
             <Button fullWidth variant="contained" color="primary" onClick={handleAddPatient}>
                 Add Patient

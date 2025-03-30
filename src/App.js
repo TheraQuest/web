@@ -10,6 +10,7 @@ import PatientDetailsPage from "./pages/PatientDetailsPage";
 import { useEffect } from "react";
 import axios from "axios";
 import SettingsPage from "./pages/SettingsPage";
+import EditPatientPage from "./pages/EditPatientPage";
 
 
 // Automatically log out if the token expires
@@ -71,6 +72,15 @@ function App() {
                             </Layout>
                         }
                     />
+                    <Route 
+                        path="/patient/edit/:id" 
+                        element={
+                            <Layout>
+                                <EditPatientPage />
+                            </Layout>
+                        } 
+                    /> 
+
                     <Route
                         path="/add-patient"
                         element={
@@ -88,7 +98,7 @@ function App() {
                         }
                     />
                     <Route
-                        path="/settings"
+                        path="/therapist"
                         element={
                             <Layout>
                                 <SettingsPage />

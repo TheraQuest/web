@@ -2,13 +2,18 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { TextField, Button, Container, Typography, MenuItem, Select, FormControl, InputLabel } from "@mui/material";
 import axios from "axios";
+// import { set } from "mongoose";
 
 function RegisterPage() {
     const [username, setUsername] = useState("");
+    const [fullName, setFullName] = useState("");
+    const [email, setEmail] = useState("");
+    const [dateOfBirth, setDateOfBirth] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [therapistID, setTherapistID] = useState("");
     const [gender, setGender] = useState("");
+    const [profilePic, setProfilePic] = useState("");
     const [error, setError] = useState("");
     const navigate = useNavigate();
 
@@ -49,6 +54,14 @@ function RegisterPage() {
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
             />
+
+            <TextField
+                fullWidth
+                label="Full Name"
+                margin="normal"
+                value={fullName}
+                onChange={(e) => setFullName(e.target.value)}
+            />
             
             <TextField
                 fullWidth
@@ -56,6 +69,22 @@ function RegisterPage() {
                 margin="normal"
                 value={therapistID}
                 onChange={(e) => setTherapistID(e.target.value)}
+            />
+
+            <TextField
+                fullWidth
+                label="Email"
+                margin="normal"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+            />
+
+            <TextField 
+                fullWidth 
+                label="Date of Birth (dd/mm/yyyy)" 
+                margin="normal" 
+                value={dateOfBirth} 
+                onChange={(e) => setDateOfBirth(e.target.value)} 
             />
             
             <FormControl fullWidth margin="normal">
@@ -69,6 +98,14 @@ function RegisterPage() {
                     <MenuItem value="Other">Other</MenuItem>
                 </Select>
             </FormControl>
+
+            <TextField
+                fullWidth
+                label="Profile Picture URL"
+                margin="normal"
+                value={profilePic}
+                onChange={(e) => setProfilePic(e.target.value)}
+            />
 
             <TextField
                 fullWidth

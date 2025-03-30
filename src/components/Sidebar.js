@@ -1,5 +1,5 @@
 import { Drawer, List, ListItem, ListItemText, Box } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 function Sidebar({ open, onClose }) {
     const navigate = useNavigate();
@@ -13,7 +13,7 @@ function Sidebar({ open, onClose }) {
                         onClick={() => { navigate("/dashboard"); onClose(); }}
                         sx={{
                             "&:hover": {
-                                backgroundColor: "#c4ddea",
+                                backgroundColor: "#91c9b0",
                                 cursor: "pointer",
                             },
                         }}
@@ -25,7 +25,7 @@ function Sidebar({ open, onClose }) {
                         onClick={() => { navigate("/add-patient"); onClose(); }}
                         sx={{
                             "&:hover": {
-                                backgroundColor: "#c4ddea",
+                                backgroundColor: "#91c9b0",
                                 cursor: "pointer",
                             },
                         }}
@@ -34,10 +34,10 @@ function Sidebar({ open, onClose }) {
                     </ListItem>
                     <ListItem
                         button
-                        onClick={() => { navigate("/settings"); onClose(); }}
+                        onClick={() => { navigate("/therapist"); onClose(); }}
                         sx={{
                             "&:hover": {
-                                backgroundColor: "#c4ddea",
+                                backgroundColor: "#91c9b0",
                                 cursor: "pointer",
                             },
                         }}
