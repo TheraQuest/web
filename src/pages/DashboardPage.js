@@ -6,6 +6,8 @@ import dayjs from "dayjs";
 import PersonIcon from "@mui/icons-material/Person";
 import Navbar from "../components/Navbar"; 
 import Sidebar from "../components/Sidebar";
+// import { getTherapistIdFromToken } from "../utils/auth";
+
 
 
 function DashboardPage() {
@@ -13,7 +15,6 @@ function DashboardPage() {
     const [search, setSearch] = useState("");
     const [showAllPatients, setShowAllPatients] = useState(true);
     const navigate = useNavigate();
-    
 
     const fetchPatients = useCallback(async () => {
         const token = localStorage.getItem("token");
@@ -51,7 +52,7 @@ function DashboardPage() {
         <Box sx={{ display: "flex" }}>
             <Sidebar />
             <Container sx={{ flexGrow: 1, p: 3, mt: 8 }}>
-            <Typography variant="h4" sx={{ mt: 3, mb: 2, fontWeight: "bold", textAlign: "center" }}>
+            <Typography variant="h4" style={{marginTop: "-20px", marginBottom: "30px"}} sx={{ mt: 3, mb: 2, fontWeight: "bold", textAlign: "center" }}>
                     Therapist Dashboard
                 </Typography>
 
@@ -99,7 +100,7 @@ function DashboardPage() {
                                 <Card 
                                     sx={{ 
                                         backgroundColor: patient.isMyPatient ? "#e3f2fd" : "white", 
-                                        borderLeft: "5px solid #0077b6",
+                                        borderLeft: "5px solid #1f6446",
                                         p: 2,
                                         cursor: "pointer"
                                     }}
@@ -112,13 +113,25 @@ function DashboardPage() {
                                         </Typography>
                                         <Typography variant="body2">ID: {patient.idNumber}</Typography>
                                         <Typography variant="body2">Age: {calculateAge(patient.dateOfBirth)}</Typography>
+                                        {/* <Button 
+                                            variant="outlined" 
+                                            color="primary" 
+                                            style={{ marginTop: "10px" }}
+                                            onClick={() => navigate(`/patient/EditPatient/${patient._id}`)}>
+                                            Edit Patient
+                                        </Button> */}
                                         <Button 
                                             variant="outlined" 
                                             color="primary" 
                                             style={{ marginTop: "10px" }}
-                                            onClick={() => navigate(`/patient/edit/${patient._id}`)}>
-                                            Edit Patient
+                                            onClick={(event) => {
+                                                event.stopPropagation(); // Prevents card click from triggering
+                                                navigate(`/patient/edit/${patient._id}`);
+                                            }}
+                                        >
+                                            Edit Patient's Details
                                         </Button>
+
 
                                     </CardContent>
                                 </Card>
