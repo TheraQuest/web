@@ -33,7 +33,10 @@ function RegisterPage() {
                 username,
                 password,
                 therapistID,
-                gender
+                gender,
+                fullName,
+                email,
+                dateOfBirth,
             });
 
             navigate("/"); // Redirect to login after successful registration
