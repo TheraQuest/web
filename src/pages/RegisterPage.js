@@ -3,6 +3,10 @@ import { useNavigate } from "react-router-dom";
 import { TextField, Button, Container, Typography, MenuItem, Select, FormControl, InputLabel } from "@mui/material";
 import axios from "axios";
 // import { set } from "mongoose";
+import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
+
+dayjs.extend(customParseFormat);
 
 function RegisterPage() {
     const [username, setUsername] = useState("");
@@ -18,6 +22,14 @@ function RegisterPage() {
     const navigate = useNavigate();
 
     const handleRegister = async () => {
+
+        const parsedDate = dayjs(dateOfBirth, "DD/MM/YYYY", true);
+        
+        if (!parsedDate.isValid()) {
+            setError("Invalid Date. Please enter in dd/mm/yyyy format.");
+            return;
+        }
+
         if (password !== confirmPassword) {
             setError("Passwords do not match");
             return;
