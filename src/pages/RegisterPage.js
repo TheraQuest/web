@@ -25,6 +25,7 @@ function RegisterPage() {
 
         const parsedDate = dayjs(dateOfBirth, "DD/MM/YYYY", true);
         
+        
         if (!parsedDate.isValid()) {
             setError("Invalid Date. Please enter in dd/mm/yyyy format.");
             return;
@@ -40,6 +41,8 @@ function RegisterPage() {
             return;
         }
 
+        const formattedDate = parsedDate.format("YYYY-MM-DD");
+
         try {
             await axios.post("http://localhost:5000/api/auth/register", {
                 username,
@@ -48,7 +51,7 @@ function RegisterPage() {
                 gender,
                 fullName,
                 email,
-                dateOfBirth,
+                dateOfBirth: formattedDate,
             });
 
             navigate("/"); // Redirect to login after successful registration

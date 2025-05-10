@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, data } from "react-router-dom";
 import { Container, TextField, Button, Typography, FormControl, InputLabel, Select, MenuItem } from "@mui/material";
 import axios from "axios";
 
@@ -23,6 +23,8 @@ function EditPatientPage() {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 setPatient(response.data);
+                console.log("Patient response:", response.data); 
+
             } catch (error) {
                 console.error("Error fetching patient", error);
                 setError("Failed to load patient data.");
@@ -37,6 +39,37 @@ function EditPatientPage() {
     const handleChange = (e) => {
         setPatient({ ...patient, [e.target.name]: e.target.value });
     };
+
+    // const handleSave = async () => {
+
+    //         // const parsedDate = dayjs(dateOfBirth, "DD/MM/YYYY", true);
+    //         // if (!parsedDate.isValid()) {
+    //         //     alert("Invalid Date. Please enter in dd/mm/yyyy format.");
+    //         //     return;
+    //         // }
+
+    //         const formData = new FormData();
+    //         formData.append("fullName", patient.fullName);
+    //         formData.append("gender", patient.gender);
+    //         formData.append("dateOfBirth", patient.birthday /*, parsedDate.toISOString()*/);
+    //         formData.append("ID number", patient.idNumber);
+    //         formData.append("madical note", patient.madicalNote);
+    //         formData.append("status", patient.status);
+            
+    //         try {
+    //             const token = localStorage.getItem("token");
+    //             await axios.put(`http://localhost:5000/api/patients/${id}`, formData, {
+    //                 headers: { Authorization: `Bearer ${token}` }
+    //             });
+
+    //             alert("Patient updated successfully!");
+    //             navigate("/dashboard"); 
+    //         } catch (error) {
+    //             console.error("Error updating patient", error);
+    //             alert("Failed to update patient.");
+    //         }
+    //     };
+    
 
     const handleSave = async () => {
         try {
