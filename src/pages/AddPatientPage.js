@@ -36,7 +36,7 @@ function AddPatientPage() {
 
         try {
             const token = localStorage.getItem("token");
-            await axios.post("http://localhost:5000/api/patients", {
+            await axios.post(`${process.env.REACT_APP_API_URL}/api/patients`, {
                 fullName,
                 idNumber,
                 dateOfBirth: formattedDate,

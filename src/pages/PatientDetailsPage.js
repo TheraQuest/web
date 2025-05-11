@@ -34,12 +34,12 @@ function PatientDetailsPage() {
             }
 
             try {
-                const patientRes = await axios.get(`http://localhost:5000/api/patients/${id}`, {
+                const patientRes = await axios.get(`${process.env.REACT_APP_API_URL}/api/patients/${id}`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 setPatient(patientRes.data);
 
-                const sessionsRes = await axios.get(`http://localhost:5000/api/sessions/${id}`, {
+                const sessionsRes = await axios.get(`${process.env.REACT_APP_API_URL}/api/sessions/${id}`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 setSessions(sessionsRes.data);
@@ -54,7 +54,7 @@ function PatientDetailsPage() {
     const handleSaveNote = async () => {
         try {
             const token = localStorage.getItem("token");
-            await axios.put(`http://localhost:5000/api/sessions/${currentSessionId}/note`, 
+            await axios.put(`${process.env.REACT_APP_API_URL}/api/sessions/${currentSessionId}/note`, 
                 { therapistNote: currentNote }, 
                 { headers: { Authorization: `Bearer ${token}` } }
             );
@@ -79,7 +79,7 @@ function PatientDetailsPage() {
     const handleStartSession = async () => {
         try {
             const token = localStorage.getItem("token");
-            const res = await axios.post("http://localhost:5000/api/sessions", 
+            const res = await axios.post(`${process.env.REACT_APP_API_URL}/api/sessions`, 
                 { patientId: id }, 
                 { headers: { Authorization: `Bearer ${token}` } }
             );

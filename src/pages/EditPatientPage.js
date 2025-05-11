@@ -19,7 +19,7 @@ function EditPatientPage() {
         const fetchPatient = async () => {
             try {
                 const token = localStorage.getItem("token");
-                const response = await axios.get(`http://localhost:5000/api/patients/${id}`, {
+                const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/patients/${id}`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 setPatient(response.data);
@@ -74,7 +74,7 @@ function EditPatientPage() {
     const handleSave = async () => {
         try {
             const token = localStorage.getItem("token");
-            await axios.put(`http://localhost:5000/api/patients/${id}`, patient, {
+           await axios.put(`${process.env.REACT_APP_API_URL}/api/patients/${id}`, patient, {
                 headers: { Authorization: `Bearer ${token}` }
             });
 

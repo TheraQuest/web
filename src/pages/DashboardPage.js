@@ -24,7 +24,7 @@ function DashboardPage() {
         }
 
         try {
-            const response = await axios.get(`http://localhost:5000/api/patients?myPatients=${!showAllPatients}`, {
+            const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/patients?myPatients=${!showAllPatients}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setPatients(response.data);

@@ -24,7 +24,7 @@ function SettingsPage() {
         const fetchTherapist = async () => {
             try {
                 const token = localStorage.getItem("token");
-                const response = await axios.get("http://localhost:5000/api/therapist", {
+                const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/therapist`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
 
@@ -58,7 +58,7 @@ const handleSave = async () => {
             newPassword
         };
 
-        await axios.put("http://localhost:5000/api/therapist", payload, {
+       await axios.put(`${process.env.REACT_APP_API_URL}/api/therapist`, payload, {
             headers: {
                 Authorization: `Bearer ${token}`,
                 "Content-Type": "application/json"
