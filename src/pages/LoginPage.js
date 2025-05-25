@@ -1,13 +1,22 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { TextField, Button, Container, Typography } from "@mui/material";
+import {
+    TextField,
+    Button,
+    Container,
+    Typography,
+    InputAdornment,
+    IconButton
+} from "@mui/material";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 import axios from "axios";
 
 function LoginPage() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    const navigate = useNavigate();
+    const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState("");
+    const navigate = useNavigate();
 
     const handleLogin = async () => {
         try {
@@ -27,6 +36,7 @@ function LoginPage() {
         <Container maxWidth="xs" style={{ marginTop: "100px", textAlign: "center" }}>
             <Typography variant="h5">TheraQuest Login</Typography>
             {error && <Typography color="error">{error}</Typography>}
+
             <TextField
                 fullWidth
                 label="Username"
@@ -34,17 +44,32 @@ function LoginPage() {
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
             />
+
             <TextField
                 fullWidth
                 label="Password"
-                type="password"
+                type={showPassword ? "text" : "password"}
                 margin="normal"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                InputProps={{
+                    endAdornment: (
+                        <InputAdornment position="end">
+                            <IconButton
+                                onClick={() => setShowPassword((prev) => !prev)}
+                                edge="end"
+                            >
+                                {showPassword ? <VisibilityOff /> : <Visibility />}
+                            </IconButton>
+                        </InputAdornment>
+                    ),
+                }}
             />
+
             <Button fullWidth variant="contained" color="primary" onClick={handleLogin}>
                 Login
             </Button>
+
             <Button fullWidth style={{ marginTop: "10px" }} onClick={() => navigate("/register")}>
                 Sign Up
             </Button>

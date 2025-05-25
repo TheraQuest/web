@@ -12,7 +12,6 @@ import axios from "axios";
 import SettingsPage from "./pages/SettingsPage";
 import EditPatientPage from "./pages/EditPatientPage";
 
-
 // Automatically log out if the token expires
 axios.interceptors.response.use(
     response => response, // Pass successful responses
