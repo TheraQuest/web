@@ -20,7 +20,7 @@ function PasswordField({ label, value, onChange }) {
             InputProps={{
                 endAdornment: (
                     <InputAdornment position="end">
-                        <IconButton onClick={() => setShowPassword((prev) => !prev)} edge="end">
+                        <IconButton onClick={() => setShowPassword(prev => !prev)} edge="end">
                             {showPassword ? <VisibilityOff /> : <Visibility />}
                         </IconButton>
                     </InputAdornment>
