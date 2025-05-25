@@ -66,9 +66,11 @@ function LoginPage() {
                 }}
             />
 
+
             <Button fullWidth variant="contained" color="primary" onClick={handleLogin}>
                 Login
             </Button>
+
             <Button fullWidth style={{ marginTop: "10px" }} onClick={() => navigate("/register")}>
                 Sign Up
             </Button>
