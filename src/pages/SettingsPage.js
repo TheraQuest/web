@@ -6,7 +6,6 @@ import {
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import axios from "axios";
 
-// קומפוננטה להצגת שדה סיסמה עם כפתור הצצה
 function PasswordField({ label, value, onChange }) {
     const [showPassword, setShowPassword] = useState(false);
 
@@ -43,7 +42,6 @@ function SettingsPage() {
     const [profilePic, setProfilePic] = useState("");
     const [profileFile, setProfileFile] = useState(null);
 
-    // שליפת פרטי המטפל
     const fetchTherapist = async () => {
         try {
             const token = localStorage.getItem("token");
@@ -68,7 +66,6 @@ function SettingsPage() {
         fetchTherapist();
     }, []);
 
-    // שמירת שינויים
     const handleSave = async () => {
         try {
             const token = localStorage.getItem("token");
