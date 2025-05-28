@@ -21,9 +21,9 @@ function PatientDetailsPage() {
     const navigate = useNavigate();
     const [patient, setPatient] = useState(null);
     const [sessions, setSessions] = useState([]);
-    const [modalOpen, setModalOpen] = useState(false); // Modal visibility
-    const [currentSessionId, setCurrentSessionId] = useState(null); // Current session for note editing
-    const [currentNote, setCurrentNote] = useState(""); // Current note text
+    const [modalOpen, setModalOpen] = useState(false);
+    const [currentSessionId, setCurrentSessionId] = useState(null);
+    const [currentNote, setCurrentNote] = useState("");
 
     useEffect(() => {
         const fetchPatientDetails = async () => {
@@ -61,19 +61,18 @@ function PatientDetailsPage() {
     
             alert("Note saved!");
 
-            // Update the session note in the state
             const updatedSessions = sessions.map(session =>
                 session._id === currentSessionId ? { ...session, therapistNote: currentNote } : session
             );
             setSessions(updatedSessions);
-            setModalOpen(false); // Close modal
+            setModalOpen(false);
         } catch (error) {
             console.error("Error saving note", error);
         }
     };
 
     const formatDate = (date) => {
-        return dayjs(date).format("DD/MM/YYYY");
+        return dayjs(date).format("DD/MM/YYYY HH:mm");
     };
 
     const handleStartSession = async () => {
@@ -85,7 +84,7 @@ function PatientDetailsPage() {
             );
     
             alert("New session started successfully!");
-            setSessions([...sessions, res.data.session]); // Add new session to the list
+            setSessions([...sessions, res.data.session]);
         } catch (error) {
             console.error("Error starting session", error);
         }
@@ -93,8 +92,22 @@ function PatientDetailsPage() {
 
     const openNoteModal = (sessionId, note) => {
         setCurrentSessionId(sessionId);
-        setCurrentNote(note || ""); // Set note for editing or empty for adding
+        setCurrentNote(note || "");
         setModalOpen(true);
+    };
+
+    // ✅ פונקציה לשליחת פרי לשרת
+    const handleAddItem = async (itemName) => {
+        try {
+            const res = await axios.post("http://localhost:5000/api/send-command", {
+                action: "add_item",
+                item: itemName
+            });
+            alert(`✅ Sent '${itemName}' to game`);
+        } catch (err) {
+            console.error("❌ Failed to send item", err);
+            alert("Failed to send item to game");
+        }
     };
 
     return (
@@ -114,23 +127,22 @@ function PatientDetailsPage() {
 
             <Typography variant="h5" style={{ marginTop: "20px", marginBottom: "10px" }}><b>Session History:</b></Typography>
 
-            {/* Grid for Sessions */}
             <Grid container spacing={2}>
                 {sessions.map((session) => (
                     <Grid item xs={12} sm={6} md={4} key={session._id}>
-                        {/* <Card sx={{ p: 2, cursor: "pointer" }}> */}
                         <Card 
                             sx={{ 
-                                backgroundColor: "#white", 
+                                backgroundColor: "#ffffff", 
                                 borderLeft: "5px solid #1f6446",
                                 p: 2,
-                                cursor: "pointer"
+                                cursor: "default"
                             }}
                         >
                             <CardContent>
                                 <Typography variant="h6">{`Score: ${session.gameScore}, Help Level: ${session.helpLevelUsed}`}</Typography>
-                                <Typography variant="body1"><b>Date:</b> {session.sessionDate || "No date available"}</Typography>
+                                <Typography variant="body1"><b>Date:</b> {formatDate(session.sessionDate)}</Typography>
                                 <Typography variant="body1"><b>Note:</b> {session.therapistNote || "No notes added"}</Typography>
+
                                 <Button 
                                     variant="outlined" 
                                     color="primary" 
@@ -139,13 +151,22 @@ function PatientDetailsPage() {
                                 >
                                     {session.therapistNote ? "Edit Note" : "Add Note"}
                                 </Button>
+
+                                {/* ✅ כפתור להוספת פרי */}
+                                <Button 
+                                    variant="outlined" 
+                                    color="secondary" 
+                                    onClick={() => handleAddItem("strawberry")}
+                                    style={{ marginTop: "10px", marginLeft: "10px" }}
+                                >
+                                    ADD FRUIT
+                                </Button>
                             </CardContent>
                         </Card>
                     </Grid>
                 ))}
             </Grid>
 
-            {/* Modal for adding/editing notes */}
             <Modal open={modalOpen} onClose={() => setModalOpen(false)}>
                 <Box sx={style}>
                     <Typography variant="h6">{currentNote ? "Edit Note" : "Add Note"}</Typography>
