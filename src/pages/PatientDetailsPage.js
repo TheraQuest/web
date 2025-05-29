@@ -60,7 +60,6 @@ function PatientDetailsPage() {
             );
     
             alert("Note saved!");
-
             const updatedSessions = sessions.map(session =>
                 session._id === currentSessionId ? { ...session, therapistNote: currentNote } : session
             );
@@ -71,8 +70,10 @@ function PatientDetailsPage() {
         }
     };
 
+    // ✅ עדכון: בדיקה אם תאריך תקף
     const formatDate = (date) => {
-        return dayjs(date).format("DD/MM/YYYY HH:mm");
+        const parsed = dayjs(date);
+        return parsed.isValid() ? parsed.format("DD/MM/YYYY HH:mm") : "No date available";
     };
 
     const handleStartSession = async () => {
@@ -96,10 +97,10 @@ function PatientDetailsPage() {
         setModalOpen(true);
     };
 
-    // ✅ פונקציה לשליחת פרי לשרת
+    // ✅ כפתור שליחת פרי
     const handleAddItem = async (itemName) => {
         try {
-            const res = await axios.post("http://localhost:5000/api/send-command", {
+            await axios.post("http://localhost:5000/api/send-command", {
                 action: "add_item",
                 item: itemName
             });
@@ -130,17 +131,10 @@ function PatientDetailsPage() {
             <Grid container spacing={2}>
                 {sessions.map((session) => (
                     <Grid item xs={12} sm={6} md={4} key={session._id}>
-                        <Card 
-                            sx={{ 
-                                backgroundColor: "#ffffff", 
-                                borderLeft: "5px solid #1f6446",
-                                p: 2,
-                                cursor: "default"
-                            }}
-                        >
+                        <Card sx={{ backgroundColor: "#ffffff", borderLeft: "5px solid #1f6446", p: 2 }}>
                             <CardContent>
                                 <Typography variant="h6">{`Score: ${session.gameScore}, Help Level: ${session.helpLevelUsed}`}</Typography>
-                                <Typography variant="body1"><b>Date:</b> {formatDate(session.sessionDate)}</Typography>
+                                <Typography variant="body1"><b>Date:</b> {session.sessionDate}</Typography>
                                 <Typography variant="body1"><b>Note:</b> {session.therapistNote || "No notes added"}</Typography>
 
                                 <Button 
@@ -152,7 +146,6 @@ function PatientDetailsPage() {
                                     {session.therapistNote ? "Edit Note" : "Add Note"}
                                 </Button>
 
-                                {/* ✅ כפתור להוספת פרי */}
                                 <Button 
                                     variant="outlined" 
                                     color="secondary" 
