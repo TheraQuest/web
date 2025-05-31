@@ -100,9 +100,9 @@ function PatientDetailsPage() {
     // ✅ כפתור שליחת פרי
     const handleAddItem = async (itemName) => {
         try {
-            await axios.post("http://localhost:5000/api/send-command", {
-                action: "add_item",
-                item: itemName
+           await axios.post(`${process.env.REACT_APP_API_URL}/api/send-command`, {
+            action: "add_item",
+            item: itemName
             });
             alert(`✅ Sent '${itemName}' to game`);
         } catch (err) {
