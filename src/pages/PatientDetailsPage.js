@@ -117,7 +117,7 @@ function PatientDetailsPage() {
                 <>
                     <Typography variant="h3" style={{ marginTop: "20px" }}><b>{patient.fullName}</b></Typography>
                     <Typography variant="h6" style={{ marginTop: "20px" }}><b>ID: </b>{patient.idNumber}</Typography>
-                    <Typography variant="h6"><b>Date of birth: </b>{formatDate(patient.dateOfBirth)}</Typography>
+                    <Typography variant="h6"><b>Date of birth: </b>{dayjs(patient.dateOfBirth).format("DD/MM/YYYY")}</Typography>
                     <Typography variant="h6" style={{ marginTop: "20px" }}><b>Medical Note: </b>{patient.medicalNote || "None"}</Typography>
                 </>
             )}
