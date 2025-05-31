@@ -58,7 +58,7 @@ function PatientDetailsPage() {
                 { therapistNote: currentNote }, 
                 { headers: { Authorization: `Bearer ${token}` } }
             );
-    
+
             alert("Note saved!");
             const updatedSessions = sessions.map(session =>
                 session._id === currentSessionId ? { ...session, therapistNote: currentNote } : session
@@ -70,10 +70,14 @@ function PatientDetailsPage() {
         }
     };
 
-    // ✅ עדכון: בדיקה אם תאריך תקף
     const formatDate = (date) => {
         const parsed = dayjs(date);
         return parsed.isValid() ? parsed.format("DD/MM/YYYY HH:mm") : "No date available";
+    };
+
+    const formatDateOnly = (date) => {
+        const parsed = dayjs(date);
+        return parsed.isValid() ? parsed.format("DD/MM/YYYY") : "No date available";
     };
 
     const handleStartSession = async () => {
@@ -83,7 +87,7 @@ function PatientDetailsPage() {
                 { patientId: id }, 
                 { headers: { Authorization: `Bearer ${token}` } }
             );
-    
+
             alert("New session started successfully!");
             setSessions([...sessions, res.data.session]);
         } catch (error) {
@@ -97,12 +101,11 @@ function PatientDetailsPage() {
         setModalOpen(true);
     };
 
-    // ✅ כפתור שליחת פרי
     const handleAddItem = async (itemName) => {
         try {
-           await axios.post(`${process.env.REACT_APP_API_URL}/api/send-command`, {
-            action: "add_item",
-            item: itemName
+            await axios.post(`${process.env.REACT_APP_API_URL}/api/send-command`, {
+                action: "add_item",
+                item: itemName
             });
             alert(`✅ Sent '${itemName}' to game`);
         } catch (err) {
@@ -117,6 +120,7 @@ function PatientDetailsPage() {
                 <>
                     <Typography variant="h3" style={{ marginTop: "20px" }}><b>{patient.fullName}</b></Typography>
                     <Typography variant="h6" style={{ marginTop: "20px" }}><b>ID: </b>{patient.idNumber}</Typography>
+
                     <Typography variant="h6"><b>Date of birth: </b>{dayjs(patient.dateOfBirth).format("DD/MM/YYYY")}</Typography>
                     <Typography variant="h6" style={{ marginTop: "20px" }}><b>Medical Note: </b>{patient.medicalNote || "None"}</Typography>
                 </>
@@ -134,7 +138,7 @@ function PatientDetailsPage() {
                         <Card sx={{ backgroundColor: "#ffffff", borderLeft: "5px solid #1f6446", p: 2 }}>
                             <CardContent>
                                 <Typography variant="h6">{`Score: ${session.gameScore}, Help Level: ${session.helpLevelUsed}`}</Typography>
-                                <Typography variant="body1"><b>Date:</b> {session.sessionDate}</Typography>
+                                <Typography variant="body1"><b>Date:</b> {formatDate(session.sessionDate)}</Typography>
                                 <Typography variant="body1"><b>Note:</b> {session.therapistNote || "No notes added"}</Typography>
 
                                 <Button 
