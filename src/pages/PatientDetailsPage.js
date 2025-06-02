@@ -23,14 +23,12 @@ const style = {
 
 // שמות מדויקים לפי prefabs ביוניטי
 const fruitOptions = [
-    "grape",
     "kiwi",
     "mushroom",
+    "yogurt",
     "onion",
     "orange",
-    "pea",
     "pumpkin",
-    "strawberry",
     "waffle",
     "watermelon 1"
 ];
