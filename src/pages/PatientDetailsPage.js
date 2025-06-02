@@ -1,8 +1,13 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Container, Typography, Button, TextField, Modal, Box, Grid, Card, CardContent } from "@mui/material";
+import { Container, Typography, Button, TextField, Modal, Box, Grid, Card, CardContent, MenuItem } from "@mui/material";
 import axios from "axios";
 import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 const style = {
     position: 'absolute',
@@ -16,6 +21,20 @@ const style = {
     p: 4,
 };
 
+// שמות מדויקים לפי prefabs ביוניטי
+const fruitOptions = [
+    "grape",
+    "kiwi",
+    "mushroom",
+    "onion",
+    "orange",
+    "pea",
+    "pumpkin",
+    "strawberry",
+    "waffle",
+    "watermelon 1"
+];
+
 function PatientDetailsPage() {
     const { id } = useParams();
     const navigate = useNavigate();
@@ -24,6 +43,8 @@ function PatientDetailsPage() {
     const [modalOpen, setModalOpen] = useState(false);
     const [currentSessionId, setCurrentSessionId] = useState(null);
     const [currentNote, setCurrentNote] = useState("");
+    const [fruitMenuOpen, setFruitMenuOpen] = useState(false);
+    const [selectedFruit, setSelectedFruit] = useState("");
 
     useEffect(() => {
         const fetchPatientDetails = async () => {
@@ -71,13 +92,8 @@ function PatientDetailsPage() {
     };
 
     const formatDate = (date) => {
-        const parsed = dayjs(date);
+        const parsed = dayjs(date).tz("Asia/Jerusalem");
         return parsed.isValid() ? parsed.format("DD/MM/YYYY HH:mm") : "No date available";
-    };
-
-    const formatDateOnly = (date) => {
-        const parsed = dayjs(date);
-        return parsed.isValid() ? parsed.format("DD/MM/YYYY") : "No date available";
     };
 
     const handleStartSession = async () => {
@@ -103,6 +119,7 @@ function PatientDetailsPage() {
 
     const handleAddItem = async (itemName) => {
         try {
+            console.log("📦 Sending item:", itemName);
             await axios.post(`${process.env.REACT_APP_API_URL}/api/send-command`, {
                 action: "add_item",
                 item: itemName
@@ -120,7 +137,6 @@ function PatientDetailsPage() {
                 <>
                     <Typography variant="h3" style={{ marginTop: "20px" }}><b>{patient.fullName}</b></Typography>
                     <Typography variant="h6" style={{ marginTop: "20px" }}><b>ID: </b>{patient.idNumber}</Typography>
-
                     <Typography variant="h6"><b>Date of birth: </b>{dayjs(patient.dateOfBirth).format("DD/MM/YYYY")}</Typography>
                     <Typography variant="h6" style={{ marginTop: "20px" }}><b>Medical Note: </b>{patient.medicalNote || "None"}</Typography>
                 </>
@@ -153,7 +169,7 @@ function PatientDetailsPage() {
                                 <Button 
                                     variant="outlined" 
                                     color="secondary" 
-                                    onClick={() => handleAddItem("watermelon 1")}
+                                    onClick={() => setFruitMenuOpen(true)}
                                     style={{ marginTop: "10px", marginLeft: "10px" }}
                                 >
                                     ADD FRUIT
@@ -164,6 +180,7 @@ function PatientDetailsPage() {
                 ))}
             </Grid>
 
+            {/* Modal להוספת הערה */}
             <Modal open={modalOpen} onClose={() => setModalOpen(false)}>
                 <Box sx={style}>
                     <Typography variant="h6">{currentNote ? "Edit Note" : "Add Note"}</Typography>
@@ -184,6 +201,41 @@ function PatientDetailsPage() {
                         style={{ marginTop: "20px" }}
                     >
                         Save Note
+                    </Button>
+                </Box>
+            </Modal>
+
+            {/* Modal לבחירת פרי */}
+            <Modal open={fruitMenuOpen} onClose={() => setFruitMenuOpen(false)}>
+                <Box sx={style}>
+                    <Typography variant="h6">Choose a fruit or vegetable</Typography>
+
+                    <TextField
+                        select
+                        label="Item"
+                        value={selectedFruit}
+                        onChange={(e) => setSelectedFruit(e.target.value)}
+                        fullWidth
+                        style={{ marginTop: "20px" }}
+                    >
+                        {fruitOptions.map((fruit) => (
+                            <MenuItem key={fruit} value={fruit}>
+                                {fruit}
+                            </MenuItem>
+                        ))}
+                    </TextField>
+
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={() => {
+                            handleAddItem(selectedFruit);
+                            setFruitMenuOpen(false);
+                        }}
+                        style={{ marginTop: "20px" }}
+                        disabled={!selectedFruit}
+                    >
+                        Send
                     </Button>
                 </Box>
             </Modal>
