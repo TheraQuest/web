@@ -3,6 +3,11 @@ import { useParams, useNavigate } from "react-router-dom";
 import { Container, Typography, Button, TextField, Modal, Box, Grid, Card, CardContent } from "@mui/material";
 import axios from "axios";
 import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 const style = {
     position: 'absolute',
@@ -71,7 +76,7 @@ function PatientDetailsPage() {
     };
 
     const formatDate = (date) => {
-        const parsed = dayjs(date);
+        const parsed = dayjs(date).tz("Asia/Jerusalem");
         return parsed.isValid() ? parsed.format("DD/MM/YYYY HH:mm") : "No date available";
     };
 
