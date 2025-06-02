@@ -153,7 +153,7 @@ function PatientDetailsPage() {
                                 <Button 
                                     variant="outlined" 
                                     color="secondary" 
-                                    onClick={() => handleAddItem("strawberry")}
+                                    onClick={() => handleAddItem("watermelon 1")}
                                     style={{ marginTop: "10px", marginLeft: "10px" }}
                                 >
                                     ADD FRUIT
